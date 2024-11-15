@@ -1,0 +1,38 @@
+name: Excel CI/CD Workflow
+
+on:
+  push:
+    paths:
+      - '**/*.xlsx'  # Trigger only on changes to Excel files
+
+jobs:
+  process_excel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas openpyxl
+
+      - name: Validate Excel file
+        run: |
+          python validate_excel.py
+
+      - name: Convert Excel file
+        run: |
+          python convert_excel.py
+
+      - name: Upload Converted Files
+        uses: actions/upload-artifact@v3
+        with:
+          name: converted-files
+          path: "*.csv, *.json"
