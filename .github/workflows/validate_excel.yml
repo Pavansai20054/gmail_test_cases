@@ -1,0 +1,32 @@
+name: Validate Excel File
+
+on:
+  pull_request:
+  push:
+    paths:
+      - '**/*.xlsx'  # Trigger only for Excel files
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Python environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # Step 3: Install required libraries
+      - name: Install dependencies
+        run: |
+          pip install pandas openpyxl xlrd
+
+      # Step 4: Run the validation script
+      - name: Validate Excel File
+        run: |
+          python validate_excel.py

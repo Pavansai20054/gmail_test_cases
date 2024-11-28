@@ -1,16 +1,25 @@
 import pandas as pd
 
-file_path = r"s:\IIIrd Year\DevOps\CI-CD\Pavan_Manual Testing Steps table.xlsx"
-data = pd.read_excel(file_path)
+def validate_excel(file_path):
+    try:
+        # Load the Excel file
+        df = pd.read_excel(file_path)
 
-# Updated validation rules based on actual column names
-required_columns = ["Test scenario ID", "Test Case Step", "Expected", "Actual"]
-missing_columns = [col for col in required_columns if col not in data.columns]
-if missing_columns:
-    raise ValueError(f"Missing required columns: {missing_columns}")
+        # Check for missing data
+        if df.isnull().values.any():
+            raise ValueError("The Excel file contains missing data.")
 
-# Checking for empty required cells in these columns
-if data[required_columns].isnull().values.any():
-    raise ValueError("Some required cells are empty in the specified columns.")
+        # Validate structure (Example: Check required columns)
+        required_columns = ['Column1', 'Column2']  # Replace with actual column names
+        if not all(col in df.columns for col in required_columns):
+            raise ValueError(f"The file is missing required columns: {required_columns}")
 
-print("Validation passed successfully!")
+        print("Validation passed: The Excel file meets all criteria!")
+
+    except Exception as e:
+        print(f"Validation failed: {e}")
+        exit(1)
+
+# Specify your file name here
+file_path = 'Pavan_Manual Testing Steps table.xlsx'
+validate_excel(file_path)
